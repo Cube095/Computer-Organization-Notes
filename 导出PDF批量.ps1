@@ -3,7 +3,7 @@
 
 param(
     [string]$VaultPath = "e:\计算机组成原理\Computer-Organization-Notes",
-    [string]$OutputPath = "e:\计算机组成原理\Computer-Organization-Notes\PDF_Output"
+    [string]$OutputPath = "e:\Computer-Organization-Notes\PDF_Output"
 )
 
 if (!(Test-Path $OutputPath)) {
