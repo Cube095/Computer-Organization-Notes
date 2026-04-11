@@ -1,16 +1,13 @@
 # Obsidian MD to PDF Batch Export Script
-# Usage: Right-click this file and select "Run with PowerShell"
 
-param(
-    [string]$VaultPath = "e:\计算机组成原理\Computer-Organization-Notes",
-    [string]$OutputPath = "$env:USERPROFILE\Desktop\PDF_Output"
-)
+$VaultPath = "E:\计算机组成原理\Computer-Organization-Notes"
+$OutputPath = "$env:USERPROFILE\Desktop\PDF_Output"
 
-if (!(Test-Path $OutputPath)) {
+if (!(Test-Path -LiteralPath $OutputPath)) {
     New-Item -ItemType Directory -Path $OutputPath | Out-Null
 }
 
-$markdownFiles = Get-ChildItem -Path $VaultPath -Filter "*.md" -Recurse | Where-Object { $_.FullName -notmatch "\\\.obsidian\\|\-assets\\|node_modules" }
+$markdownFiles = Get-ChildItem -LiteralPath $VaultPath -Filter "*.md" -Recurse | Where-Object { $_.FullName -notmatch "\.obsidian|\-assets|node_modules" }
 
 $total = $markdownFiles.Count
 $current = 0
@@ -27,7 +24,7 @@ foreach ($file in $markdownFiles) {
         $pdfFileName = $file.BaseName + ".pdf"
         $pdfFullPath = Join-Path $OutputPath $pdfFileName
 
-        $htmlContent = Get-Content -Path $file.FullName -Raw -Encoding UTF8
+        $htmlContent = Get-Content -LiteralPath $file.FullName -Raw -Encoding UTF8
         $htmlContent = $htmlContent -replace '!\[\[(.*?)\]\]', '<img src="$1" />'
         $htmlContent = @"
 <!DOCTYPE html>
@@ -52,7 +49,7 @@ $htmlContent
         $htmlContent | Out-File -FilePath $tempHtml -Encoding UTF8
 
         $edgePath = "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
-        if (!(Test-Path $edgePath)) {
+        if (!(Test-Path -LiteralPath $edgePath)) {
             $edgePath = "C:\Program Files\Microsoft\Edge\Application\msedge.exe"
         }
 
@@ -86,5 +83,3 @@ Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "Export completed!" -ForegroundColor Green
 Write-Host "PDF files saved to: $OutputPath" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
-
-Read-Host "Press Enter to exit"
