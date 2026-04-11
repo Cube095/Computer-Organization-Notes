@@ -1,5 +1,5 @@
-# Obsidian MD to PDF 批量导出脚本
-# 使用方法：右键点击此脚本，选择"使用 PowerShell 运行"
+# Obsidian MD to PDF Batch Export Script
+# Usage: Right-click this file and select "Run with PowerShell"
 
 param(
     [string]$VaultPath = "e:\计算机组成原理\Computer-Organization-Notes",
@@ -15,13 +15,13 @@ $markdownFiles = Get-ChildItem -Path $VaultPath -Filter "*.md" -Recurse | Where-
 $total = $markdownFiles.Count
 $current = 0
 
-Write-Host "找到 $total 个 MD 文件" -ForegroundColor Cyan
+Write-Host "Found $total MD files" -ForegroundColor Cyan
 Write-Host ""
 
 foreach ($file in $markdownFiles) {
     $current++
     $relativePath = $file.FullName.Replace($VaultPath, "").TrimStart("\")
-    Write-Host "[$current/$total] 处理中: $relativePath"
+    Write-Host "[$current/$total] Processing: $relativePath"
 
     try {
         $pdfFileName = $file.BaseName + ".pdf"
@@ -71,20 +71,20 @@ $htmlContent
         }
 
         if (Test-Path $pdfFullPath) {
-            Write-Host "  -> 已保存: $pdfFileName" -ForegroundColor Green
+            Write-Host "  -> Saved: $pdfFileName" -ForegroundColor Green
         } else {
-            Write-Host "  -> 警告: PDF 文件未生成" -ForegroundColor Yellow
+            Write-Host "  -> Warning: PDF not generated" -ForegroundColor Yellow
         }
     }
     catch {
-        Write-Host "  -> 错误: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "  -> Error: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
 
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "导出完成！" -ForegroundColor Green
-Write-Host "PDF 文件保存在: $OutputPath" -ForegroundColor Cyan
+Write-Host "Export completed!" -ForegroundColor Green
+Write-Host "PDF files saved to: $OutputPath" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 
-Read-Host "按 Enter 键退出"
+Read-Host "Press Enter to exit"
