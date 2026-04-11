@@ -1,13 +1,15 @@
 # Obsidian MD to PDF Batch Export Script
 
-$VLT = "E:\COMPUTE~1\COMPUTE~1"
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+Set-Location -LiteralPath $scriptDir
+$VLT = Get-Location
 $OUT = "$env:USERPROFILE\Desktop\PDF_Output"
 
 if (!(Test-Path -LiteralPath $OUT)) {
     New-Item -ItemType Directory -Path $OUT | Out-Null
 }
 
-$files = Get-ChildItem -LiteralPath $VLT -Filter "*.md" -Recurse | Where-Object { $_.FullName -notmatch "\.obsidian|\-assets|node_modules" }
+$files = Get-ChildItem -Filter "*.md" -Recurse | Where-Object { $_.FullName -notmatch "\.obsidian|\-assets|node_modules" }
 
 $total = $files.Count
 $current = 0
@@ -17,7 +19,7 @@ Write-Host ""
 
 foreach ($f in $files) {
     $current++
-    $rel = $f.FullName.Substring($VLT.Length).TrimStart("\")
+    $rel = $f.FullName.Substring($VLT.Path.Length).TrimStart("\")
     Write-Host "[$current/$total] Processing: $rel"
 
     try {
